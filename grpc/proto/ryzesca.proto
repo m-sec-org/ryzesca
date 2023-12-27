@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+
+package ryzesca;
+
+option go_package = "/ryzesca";  // 指定生成的go文件的包名
+
+
+service Ryzesca {
+  rpc RunRyzescaCycloneDX(RyzescaParams) returns (RyzescaResult) {}
+}
+
+
+message RyzescaParams {
+  string scancode_jsonpath = 1;
+  string scancode_json = 2;
+  int32 processes = 3;
+  int32 timeout = 4;
+  int32 max_in_memory = 5;
+  bool identifier_package = 6;
+  bool finding_package_vul = 7;
+  bool simple_package_vul = 8;
+  bool finding_summary = 9;
+  bool only_json_summary = 10;
+  string output_jsonpath = 11;
+  bool only_findings = 12;
+  string task_id = 13;
+  string cyclonedx_json = 14;
+  string cyclonedx_jsonpath = 15;
+}
+
+message RyzescaResult {
+  Header headers = 1;
+  File files = 2;
+}
+message Header {
+  string tool_name = 1;
+  string tool_version = 2;
+  string start_timestamp = 3;
+  string end_timestamp = 4;
+  double duration = 5;
+  string message = 6;
+  repeated string errors = 7;
+  map<string, google.protobuf.Value> extra_data = 8;
+}
+
+message Package {
+  string type = 1;
+  string namespace = 2;
+  string name = 3;
+  string version = 4;
+  google.protobuf.Value declared_license = 5;
+  string purl = 6;
+}
+
+message PackageVulerability {
+  string package_name = 1;
+  string package_version = 2;
+  string purl = 3;
+  repeated string package_identifiers = 4;
+  repeated string vulnerable_identifiers = 5;
+  repeated string vulnerable_versions = 6;
+  int32 risk_level = 8;
+  // TODO 对应cve_infos 数据库
+  repeated CVEInfo cve_vul_infos = 7;
+}
+
+message CVEInfo {
+  // TODO 对应cve_references 数据库
+  message CVEReference {
+    string name = 1;
+    string url = 2;
+    string refsource = 3;
+    string tags = 4;
+  }
+  // TODO 对应cve_rela 数据库
+  message CWE {
+    string cwe_id = 1;
+    string cwe_name = 2;
+  }
+  // TODO 对应cve_infos 数据库
+  string nssvd_id = 1;
+  string cve_id = 2;
+  string cnnvd_id = 3;
+  string cnnvd_name = 4;
+  string cnvd_id = 20;
+  string cnvd_name = 21;
+  string description_en = 5;
+  string description_zh = 6;
+  string solution_en = 7;
+  string solution_zh = 8;
+  string published_date = 9;
+  string last_modified_date = 10;
+  CWE cwe_ids = 11;
+  string identifier = 12;
+  string version = 13;
+  string confidence = 14;
+  repeated CVEReference cve_references = 15;
+  map<string, google.protobuf.Value> cve_metric2 = 16;
+  map<string, google.protobuf.Value> cve_metric3 = 17;
+  map<string, google.protobuf.Value> cnnvd_metric = 18;
+  int32 risk_level = 19;
+}
+
+message File {
+  string path = 1;
+  string type = 2;
+  string name = 3;
+  string base_name = 4;
+  repeated Package packages = 5;
+  repeated PackageVulerability package_vulnerabilities = 6;
+}
