@@ -93,6 +93,9 @@ type CVEInfo struct {
 RyzeSCA支持CloneDX格式的sbom，您可以使用CycloneDX for Maven/Gradle、CycloneDX for Go、CycloneDX for Rust Cargo、CycloneDX for Python等工具，引入CI/CD项目中，提取sbom数据交由RyzeSCA进行安全分析，如下图。
 ![](./img/2.png) 
 
+@author buding00：M-SEC社区核心认证成员，社区共创勋章获得者，深入理解漏洞原理，擅长代码审计及漏洞挖掘，擅长golang和python等语言的系统开发，RyzeSCA是其代表项目之一。
+RyzeSCA将由buding00和M-SEC社区官方人员共同维护，也期待各位的反馈和建议。
+
 ## 绿盟科技相关商业产品
 经绿盟专业安全研发团队出品的工具，面向M-SEC社区开放，为广大安全从业者提供相关能力支持，除社区工具外，绿盟科技也提供相关能力安全产品，您也可以邮件 msec@nsfocus.com 申请绿盟科技商业产品。
 ### SDA（绿盟安全开发与分析系统）
@@ -105,5 +108,6 @@ SDA是一款集软件组成分析（SCA）和静态应用程序安全测试（SA
 RyzeIAST集成了IAST和SCA方面的能力，通过Server-Agent的交互方式，实现对软件的安全检测。其中RyzeIAST的Agent探针依附软件运行的中间件，用于在系统运行过程中采集交互信息，可以动态加载的第三方组件及依赖，因此RyzeIAST对于sbom的自动化构建及安全检测方面具备先天的优势。
 ![](./img/1.png)
 
-@author buding00：M-SEC社区核心认证成员，社区共创勋章获得者，深入理解漏洞原理，擅长代码审计及漏洞挖掘，擅长golang和python等语言的系统开发，RyzeSCA是其代表项目之一。
-RyzeSCA将由buding00和M-SEC社区官方人员共同维护，也期待各位的反馈和建议。
+扫码关注 M-SEC 社区公众号，发送关键字“RyzeSCA”加入 M-SEC 社区交流群。
+
+![](./img/4.jpg)
