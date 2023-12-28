@@ -3,13 +3,10 @@ package main
 import (
 	"RyzeSCA/global"
 	"RyzeSCA/initf"
-	"fmt"
-	"github.com/spf13/viper"
-	"time"
 )
 
 func main() {
-	fmt.Println(time.Now(), "grpc 启动成功 端口号为", viper.GetInt("server.port"))
+
 }
 
 func init() {
@@ -23,6 +20,6 @@ func init() {
 	}
 	global.MysqlDB = mysql
 	global.Logger.Info("mysql连接成功")
-	fmt.Println(time.Now().Format("2006-01-02 :15-04-05"), "grpc 启动成功 端口号为", viper.GetInt("server.port"))
+	initf.Banner()
 	initf.GrpcServerInit()
 }

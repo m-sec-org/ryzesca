@@ -18,32 +18,6 @@ func demo01() {
 	fmt.Println(VersionComparison(v5, v6))
 }
 func TestVersionComparison(t *testing.T) {
-	//demo01()
-	//s1 := []string{"1", "2", "3", "4", "5"}
-	//s2 := []string{"6", "7", "8"}
-	//for i := 0; i < len(s1)-len(s2)+1; i++ {
-	//	s2 = append(s2, "0")
-	//}
-	//fmt.Println(len(s1))
-	//fmt.Println(len(s2))
-	//fmt.Println(len(s1) - len(s2))
-	//fmt.Println(s2)
-	//fmt.Println(s1)
-	//v1, _ := strconv.ParseUint(strconv.Itoa(0), 10, 64)
-	//atoi, _ := strconv.Atoi("0")
-	//fmt.Println(v1)
-	//fmt.Println(atoi)
-	//v1str := "1.23635.56.5156.65.515.626fafasdf.155.515asdf.51afsd.asasdf"
-	//res, _ := regexp.Compile(constant.VERSIONRE)
-	//matchString := res.FindStringSubmatch(strings.TrimSpace(v1str))
-	////match := res.Match([]byte(strings.TrimSpace(v1str)))
-	//fmt.Println(matchString)
-
-	//comparison := VersionComparison("1.2.3.4.56.5", "13.25.1")
-	//comparison1 := VersionComparison("13.25.1", "1.2.3.4.56.5")
-	//fmt.Println(comparison)
-	//fmt.Println(comparison1)
-
 	s1 := []string{"1", "2", "3", "4", "5"}
 	s2 := []string{"6", "7", "8"}
 	fmt.Println(len(s1))

@@ -15,7 +15,7 @@ type CveSoftware struct {
 	Vulnerable            int    `gorm:"column:vulnerable" json:"vulnerable"`
 }
 
-// RemoveRepeatedElementAndEmpty 传入一个server.NssvdIdPackageName切片，去除重复的元素和空的元素
+// RemoveRepeatedElementAndEmpty ,去除重复的元素和空的元素
 func RemoveRepeatedElementAndEmpty(slice []CveSoftware) []CveSoftware {
 	// 去除重复的元素
 	//slice = RemoveRepeatedElement(slice)

@@ -23,9 +23,6 @@ func StrTrimSpace(v1str, v2str string) (v1, v2 string) {
 func compareSlice(v1slice, v2slice []string) int {
 	for index, _ := range v1slice {
 		v1, _ := strconv.Atoi(v1slice[index])
-		//fmt.Println("*******************")
-		//fmt.Println(v2slice[index])
-		//fmt.Println("*******************")
 		v2, _ := strconv.Atoi(v2slice[index])
 		if v1 > v2 {
 			return version1
@@ -56,10 +53,6 @@ targetVersion < checkVersion return 2
 func VersionComparison(targetVersion string, checkVersion string) int {
 	// 位数不全 后面0补齐
 	targetVersion, checkVersion = StrTrimSpace(targetVersion, checkVersion)
-	//fmt.Println("*******************")
-	//fmt.Println(targetVersion)
-	//fmt.Println(checkVersion)
-	//fmt.Println("*******************")
 	v1slice := strings.Split(targetVersion, ".")
 	v2slice := strings.Split(checkVersion, ".")
 

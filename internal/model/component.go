@@ -21,15 +21,11 @@ type Component struct {
 	Version       string `json:"version"`
 }
 
-// GetAllPossibleComponent namespace 要解析进去
+// GetAllPossibleComponent 获取所有组件
 func (component *Component) GetAllPossibleComponent() ([]Component, error) {
-	// 厂商名称所有可能的组合
 	var vendorAliases []string
-	// 组件名称所有可能的组合
 	var nameAliases []string
-	// 返回结果合集
 	var result []Component
-	//vendor := component.NameSpace
 	packageName := component.PackageName
 	purl := component.Purl
 	pkgType := ""
@@ -39,7 +35,6 @@ func (component *Component) GetAllPossibleComponent() ([]Component, error) {
 		if err != nil {
 			return result, err
 		}
-		// packageURL 是否是空对象
 		pkgType = packageURL.Type
 		qualifiers := packageURL.Qualifiers
 		distroName := qualifiers.Map()["distro_name"]
@@ -62,7 +57,6 @@ func (component *Component) GetAllPossibleComponent() ([]Component, error) {
 			result = append(result, componentA)
 			return result, nil
 		}
-		// 创建python变体
 		if strings.HasPrefix(purl, "pkg:pypi") {
 			if !strings.HasPrefix(packageName, "python-") {
 				nameAliases = append(nameAliases, fmt.Sprintf("python-%s", packageName))
@@ -73,7 +67,6 @@ func (component *Component) GetAllPossibleComponent() ([]Component, error) {
 			vendorAliases = append(vendorAliases, fmt.Sprintf("python-%s", packageName))
 			vendorAliases = append(vendorAliases, fmt.Sprintf("%sproject", packageName))
 		}
-		// 创建java变体
 		if strings.HasPrefix(purl, "pkg:maven") {
 			if strings.Contains(packageName, "-web") {
 				nameAliases = append(nameAliases, strings.ReplaceAll(packageName, "-web", "_framework"))

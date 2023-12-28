@@ -16,7 +16,7 @@ mysql:
   port: 3306
   user: root
   password: 123456
-  database: themis
+  database: ryzesca
   # 设置最大空闲连接
   MaxIdleCons: 10
   # 设置最大打开连接

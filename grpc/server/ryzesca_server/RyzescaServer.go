@@ -66,37 +66,21 @@ func (RyzescaServer RyzescaServer) RunRyzescaCycloneDX(ctx context.Context, requ
 			continue
 		} else {
 			for _, possibleComponent := range allPossibleComponents {
-				// 每个可能的组件的搜索结果 结果是个列表
 				selectComponent := SelectComponent(possibleComponent)
 				if len(selectComponent) == 0 {
-					// 查询结果为空
 					continue
 				} else {
 					empty := model.RemoveRepeatedElementAndEmpty(selectComponent)
-					//fmt.Println(selectComponent)
 					version := CheckSoftwareVersion(empty, possibleComponent.Version)
 					if len(version) != 0 {
-						//fmt.Println(possibleComponent)
-						//fmt.Println(version)
-						//fmt.Println(len(version))
 						componentSelect = append(componentSelect, version...)
 					}
-					//fmt.Println(json.Marshal(selectComponent))
-					//marshal, _ := json.Marshal(selectComponent)
-					//fmt.Println(string(marshal))
 				}
 			}
 
 		}
 		componentSelect = model.RemoveRepeatedElement(componentSelect)
 		if len(componentSelect) != 0 {
-			//fmt.Println()
-			//fmt.Println("***********************")
-			//fmt.Println(component)
-			//fmt.Println(componentSelect)
-			//fmt.Println(len(componentSelect))
-			//fmt.Println("***********************")
-			//fmt.Println()
 			var nssvdIdPackageNames []model.NssvdIdPackageName
 			for _, software := range componentSelect {
 				nssvdIdPackageNames = append(nssvdIdPackageNames, model.NssvdIdPackageName{
@@ -175,11 +159,9 @@ func SelectComponent(component model.Component) []model.CveSoftware {
 }
 
 func CheckSoftwareVersion(software []model.CveSoftware, targetVersion string) []model.CveSoftware {
-	// 返回结果
 	var result []model.CveSoftware
 	for _, cveSoftware := range software {
 		if cveSoftware.VersionStartIncluding != "" && cveSoftware.VersionEndIncluding != "" {
-			// 开始和结束都不为空时候 只要版本相等就符合条件
 			if utils.VersionComparison(targetVersion, cveSoftware.VersionStartIncluding) == 0 || utils.VersionComparison(targetVersion, cveSoftware.VersionEndIncluding) == 0 {
 				result = append(result, cveSoftware)
 			} else {
@@ -189,13 +171,11 @@ func CheckSoftwareVersion(software []model.CveSoftware, targetVersion string) []
 			}
 		} else {
 			if cveSoftware.VersionStartExcluding != "" && cveSoftware.VersionEndExcluding != "" {
-				// 开始和结束都不为空时候 只要版本相等就符合条件
 				if utils.VersionComparison(targetVersion, cveSoftware.VersionStartExcluding) == 1 || utils.VersionComparison(targetVersion, cveSoftware.VersionEndExcluding) == 2 {
 					result = append(result, cveSoftware)
 				}
 			} else {
 				if cveSoftware.VersionStartExcluding != "" && cveSoftware.VersionEndIncluding != "" {
-					// 大于开始版本号 小于等于结束版本号
 					if utils.VersionComparison(targetVersion, cveSoftware.VersionEndIncluding) == 0 {
 						result = append(result, cveSoftware)
 					} else {
@@ -205,7 +185,6 @@ func CheckSoftwareVersion(software []model.CveSoftware, targetVersion string) []
 					}
 				} else {
 					if cveSoftware.VersionStartIncluding != "" && cveSoftware.VersionEndExcluding != "" {
-						// 等于开始包含的版本号
 						if utils.VersionComparison(targetVersion, cveSoftware.VersionStartIncluding) == 0 {
 							result = append(result, cveSoftware)
 						} else {

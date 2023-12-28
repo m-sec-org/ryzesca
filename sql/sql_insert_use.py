@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time    :  2023/8/16 9:33
 # @Author  :  buding
-# @Email   :  budingplus@163.com
+# @Email   :  2579674772@163.com
 # @File    :  sql_insert_use.py
 # @software:  PyCharm
 import sqlite3

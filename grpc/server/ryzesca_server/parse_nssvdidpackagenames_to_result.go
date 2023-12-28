@@ -15,20 +15,13 @@ func ParseNssvdIdPackageNamesToResult(nssvdIdPackageNamesTow [][]model.NssvdIdPa
 
 	var err error
 	var packageVulnerabilities []*ryzesca.PackageVulerability
-
-	//var lock sync.Mutex
-	// 返回结果中的 proto 中的  cve_vul_infos
-
 	for _, nssvdIdPackageNames := range nssvdIdPackageNamesTow {
-		// 外层循环
 		var packageVulnerabilitiesUse ryzesca.PackageVulerability
 		var themisCveInfos []*ryzesca.CVEInfo
 		for _, nssvdIdPackageName := range nssvdIdPackageNames {
-
-			// 内部拿到每个 NssvdIdPackageName 实例的循环
 			// *************************************************************
-			// 这里是添加全部的 Package 已经搞定了
-			// 下面是 PackageVulnerabilities 需要搞定
+			//
+			//
 			// *************************************************************
 			packageVulnerabilitiesUse.PackageName = nssvdIdPackageName.PackageName
 			packageVulnerabilitiesUse.PackageVersion = nssvdIdPackageName.Version
@@ -41,15 +34,12 @@ func ParseNssvdIdPackageNamesToResult(nssvdIdPackageNamesTow [][]model.NssvdIdPa
 			openClose := utils.HandleVersionOpenClose(nssvdIdPackageName.VersionEndExcluding, nssvdIdPackageName.VersionEndIncluding, nssvdIdPackageName.VersionStartExcluding, nssvdIdPackageName.VersionStartIncluding)
 			vulnerableVersionsUse = append(vulnerableVersionsUse, openClose)
 			// *************************************************************
-			// 下面是返回的 cve_vul_infos 里的数据 有很多个 组合到外层循环里
+			//
 			// *************************************************************
-			// 每次内部循环都置空 他在内部循环是唯一值
 			var themisCveInfosUse ryzesca.CVEInfo
-			// 定义 model.CveInfos
 			var modelCveInfosUse model.CveInfos
 			err = global.MysqlDB.Select("*").Where("nssvd_id = ?", nssvdIdPackageName.NssvdId).Find(&modelCveInfosUse).Error
 			if err != nil {
-				fmt.Println("查询失败,结果为空")
 				global.Logger.Error("查询失败,结果为空", err)
 			}
 			// 查询结果转化到 themisCveInfosUse 里面
@@ -65,25 +55,17 @@ func ParseNssvdIdPackageNamesToResult(nssvdIdPackageNamesTow [][]model.NssvdIdPa
 			themisCveInfosUse.SolutionZh = modelCveInfosUse.SolutionZh
 			themisCveInfosUse.PublishedDate = modelCveInfosUse.PublishedDate
 			themisCveInfosUse.LastModifiedDate = modelCveInfosUse.LastModifiedDate
-
 			var cweIdsUse model.CveRela
 			err = global.MysqlDB.Select("*").Where("nssvd_id = ?", nssvdIdPackageName.NssvdId).Find(&cweIdsUse).Error
 			if err != nil {
-				fmt.Println("查询失败,结果为空")
 				global.Logger.Error("查询失败,结果为空", err)
 			}
-			// 这里是取得地址 等下看一下数据是否正常 不正常的话就要用 初始化一个 themis.CVEInfo_CWE 再去传入地址
-			//themisCveInfosUse.CweIds.CweId = cweIdsUse.CweId
-			//themisCveInfosUse.CweIds.CweName = cweIdsUse.CweName
 			var themisCweIdsUse ryzesca.CVEInfo_CWE
 			themisCweIdsUse.CweId = cweIdsUse.CweId
 			themisCweIdsUse.CweName = cweIdsUse.CweName
 			themisCveInfosUse.CweIds = &themisCweIdsUse
-			// identifier 在上面
 			themisCveInfosUse.Identifier = nssvdIdPackageName.Cpe
-			// version 在上面
 			themisCveInfosUse.Version = openClose
-			// confidence 为空
 			themisCveInfosUse.Identifier = "high"
 			var themisCveReferences []*ryzesca.CVEInfo_CVEReference
 			var modelCveReferences []model.CveReferences
@@ -97,17 +79,13 @@ func ParseNssvdIdPackageNamesToResult(nssvdIdPackageNamesTow [][]model.NssvdIdPa
 				themisCveReferences = append(themisCveReferences, &themisCveReference)
 			}
 			themisCveInfosUse.CveReferences = themisCveReferences
-
 			var cveMetric2use model.CveMetric2
-			// 创建一个model 里的 CveMetric2
 			err = global.MysqlDB.Select("*").Where("nssvd_id = ?", nssvdIdPackageName.NssvdId).Find(&cveMetric2use).Error
-			//
 			var cveMetric2Map map[string]*structpb.Value
 			cveMetric2Map = make(map[string]*structpb.Value)
 			valMetrica := reflect.ValueOf(cveMetric2use) //获取reflect.Type类型
 			typMetric2 := reflect.TypeOf(cveMetric2use)
 			for i := 0; i < valMetrica.NumField(); i++ {
-				//if
 				if valMetrica.Field(i).Kind() == reflect.Float64 {
 					if valMetrica.Field(i).Float() == 0 {
 						cveMetric2Map[typMetric2.Field(i).Tag.Get("json")] = &structpb.Value{
@@ -118,7 +96,6 @@ func ParseNssvdIdPackageNamesToResult(nssvdIdPackageNamesTow [][]model.NssvdIdPa
 					} else {
 						cveMetric2Map[typMetric2.Field(i).Tag.Get("json")] = &structpb.Value{
 							Kind: &structpb.Value_NumberValue{
-								// 判断一下 valMetrica.Field(i).Interface() 的类型
 								NumberValue: valMetrica.Field(i).Float(),
 							},
 						}
@@ -134,7 +111,6 @@ func ParseNssvdIdPackageNamesToResult(nssvdIdPackageNamesTow [][]model.NssvdIdPa
 					} else {
 						cveMetric2Map[typMetric2.Field(i).Tag.Get("json")] = &structpb.Value{
 							Kind: &structpb.Value_StringValue{
-								// 判断一下 valMetrica.Field(i).Interface() 的类型
 								StringValue: valMetrica.Field(i).String(),
 							},
 						}
@@ -142,9 +118,7 @@ func ParseNssvdIdPackageNamesToResult(nssvdIdPackageNamesTow [][]model.NssvdIdPa
 				}
 			}
 			themisCveInfosUse.CveMetric2 = cveMetric2Map
-
 			var cveMetric3use model.CveMetric3
-
 			err = global.MysqlDB.Select("*").Where("nssvd_id = ?", nssvdIdPackageName.NssvdId).Find(&cveMetric3use).Error
 			var cveMetric3Map map[string]*structpb.Value
 			cveMetric3Map = make(map[string]*structpb.Value)
@@ -161,7 +135,6 @@ func ParseNssvdIdPackageNamesToResult(nssvdIdPackageNamesTow [][]model.NssvdIdPa
 					} else {
 						cveMetric3Map[typMetric3.Field(i).Tag.Get("json")] = &structpb.Value{
 							Kind: &structpb.Value_NumberValue{
-								// 判断一下 valMetrica.Field(i).Interface() 的类型
 								NumberValue: valMetric3.Field(i).Float(),
 							},
 						}
@@ -268,7 +241,6 @@ func ParseNssvdIdPackageNamesToResult(nssvdIdPackageNamesTow [][]model.NssvdIdPa
 			packageVulnerabilitiesUse.PackageIdentifiers = packageIdentifiersuse
 			packageVulnerabilitiesUse.VulnerableIdentifiers = vulnerableIdentifiersUse
 			packageVulnerabilitiesUse.VulnerableVersions = vulnerableVersionsUse
-			// 里层循环
 		}
 		packageVulnerabilities = append(packageVulnerabilities, &packageVulnerabilitiesUse)
 	}
